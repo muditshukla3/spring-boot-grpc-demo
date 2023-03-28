@@ -1,0 +1,9 @@
+grpc:
+  client:
+    grpc-service:
+      address: static://localhost:9999
+      negotiationType: plaintext
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package com.ms;
+
+option java_multiple_files = true;
+option java_package = "com.ms";
+
+message Book{
+  int32 book_id = 1;
+  string title = 2;
+  float price = 3;
+  int32 pages = 4;
+  int32 author_id = 5;
+}
+
+message Author{
+  int32 author_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string gender = 4;
+  int32 book_id = 5;
+}
+
+service BookAuthorService{
+  //unary(synchronous) - client will send 1 request and server will respond with 1 response
+  rpc getAuthor(Author) returns(Author){}
+
+  //server-streaming - asynchronous
+  rpc getBookByAuthor(Author) returns (stream Book){}
+
+  //client-streaming - asynchronous
+  rpc getExpensiveBooks(stream Book) returns (Book){}
+
+  //bi-directional -  asynchronous
+  rpc getBookByAuthorGender(stream Book) returns (stream Book){}
+}
