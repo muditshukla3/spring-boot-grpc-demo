@@ -7,6 +7,8 @@ import com.ms.BookAuthorServiceGrpc;
 import com.ms.DummyDB;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class BookAuthorService {
+
+    private Log log = LogFactory.getLog(BookAuthorService.class);
 
     //synchronous client
     @GrpcClient("grpc-service")
@@ -25,6 +29,11 @@ public class BookAuthorService {
     BookAuthorServiceGrpc.BookAuthorServiceStub bookAuthorServiceStub;
 
     public Map<Descriptors.FieldDescriptor, Object> getAuthor(int authorId){
+        log.trace("This is a TRACE level message");
+        log.debug("This is a DEBUG level message");
+        log.info("This is an INFO level message");
+        log.warn("This is a WARN level message");
+        log.error("This is an ERROR level message");
         Author authorRequest = Author.newBuilder().setAuthorId(authorId).build();
         Author authorResponse = bookAuthorServiceBlockingStub.getAuthor(authorRequest);
         return authorResponse.getAllFields();

@@ -1,3 +1,28 @@
 grpc:
   server:
     port: 9999
+
+spring:
+  application:
+    name: grpc-service
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+        username: admin
+        password: admin@123
+
+server:
+  port: 7070
+management:
+  server:
+    port: 7071
+  endpoints:
+    web:
+      exposure:
+        include: loggers, health, info
+  endpoint:
+    loggers:
+      enabled: true
+    health:
+      show-details: always

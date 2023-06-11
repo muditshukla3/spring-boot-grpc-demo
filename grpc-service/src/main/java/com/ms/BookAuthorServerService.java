@@ -2,14 +2,25 @@ package com.ms;
 
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @GrpcService
 public class BookAuthorServerService extends BookAuthorServiceGrpc.BookAuthorServiceImplBase {
+
+    private Log log = LogFactory.getLog(BookAuthorServerService.class);
     @Override
     public void getAuthor(Author request, StreamObserver<Author> responseObserver) {
+
+        log.trace("This is a TRACE level message");
+        log.debug("This is a DEBUG level message");
+        log.info("This is an INFO level message");
+        log.warn("This is a WARN level message");
+        log.error("This is an ERROR level message");
+
         DummyDB.getAuthorsFromTempDb().
                 stream().filter(author -> author.getAuthorId() == request.getAuthorId())
                 .findFirst().ifPresent(responseObserver::onNext);
