@@ -5,6 +5,7 @@ import com.ms.Author;
 import com.ms.Book;
 import com.ms.BookAuthorServiceGrpc;
 import com.ms.DummyDB;
+import com.ms.dto.AuthorDTO;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,15 @@ public class BookAuthorService {
     @GrpcClient("grpc-service")
     BookAuthorServiceGrpc.BookAuthorServiceStub bookAuthorServiceStub;
 
-    public Map<Descriptors.FieldDescriptor, Object> getAuthor(int authorId){
+    public AuthorDTO getAuthor(int authorId){
         Author authorRequest = Author.newBuilder().setAuthorId(authorId).build();
-        Author authorResponse = bookAuthorServiceBlockingStub.getAuthor(authorRequest);
-        return authorResponse.getAllFields();
+        Author response = bookAuthorServiceBlockingStub.getAuthor(authorRequest);
+        AuthorDTO authorDTO = new AuthorDTO(response.getAuthorId(),
+                                            response.getFirstName(),
+                                            response.getLastName(),
+                                            response.getGender(),
+                                            response.getBookId());
+        return authorDTO;
     }
 
     public List<Map<Descriptors.FieldDescriptor, Object>> getBooksByAuthorId(int authorId) throws InterruptedException {

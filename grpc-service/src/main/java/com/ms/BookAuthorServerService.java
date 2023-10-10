@@ -1,15 +1,18 @@
 package com.ms;
 
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @GrpcService
+@Slf4j
 public class BookAuthorServerService extends BookAuthorServiceGrpc.BookAuthorServiceImplBase {
     @Override
     public void getAuthor(Author request, StreamObserver<Author> responseObserver) {
+        log.info("GetAuthor request... {}", request);
         DummyDB.getAuthorsFromTempDb().
                 stream().filter(author -> author.getAuthorId() == request.getAuthorId())
                 .findFirst().ifPresent(responseObserver::onNext);

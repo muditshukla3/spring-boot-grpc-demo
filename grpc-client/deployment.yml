@@ -1,0 +1,48 @@
+# Simple deployment used to deploy and manage the app in muditshukla3/ipl-dashboard:1-RELEASE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-client
+  labels:
+    app: grpc-client
+spec:
+  replicas: 1
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: grpc-client
+  template:
+    metadata:
+      labels:
+        app: grpc-client
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+        - name: grpc-client-pod
+          image: muditshukla3/grpc-client:1-SNAPSHOT
+          env:
+            - name: SERVER_HOST
+              value: "dns:///grpc-service:9999"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grpc-client-nodeport
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 8080
+      nodePort: 31111
+      protocol: TCP
+  selector:
+    app: grpc-client
