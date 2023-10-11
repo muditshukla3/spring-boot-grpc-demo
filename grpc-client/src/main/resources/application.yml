@@ -1,9 +1,11 @@
 grpc:
   client:
     grpc-service:
-      address: static://localhost:9999
+      address: ${SERVER_HOST:static://localhost:9999}
       negotiationType: plaintext
 spring:
+  application:
+    name: grpc-client
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

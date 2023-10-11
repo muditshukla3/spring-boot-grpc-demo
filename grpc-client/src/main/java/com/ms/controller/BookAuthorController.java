@@ -1,6 +1,7 @@
 package com.ms.controller;
 
 import com.google.protobuf.Descriptors;
+import com.ms.dto.AuthorDTO;
 import com.ms.service.BookAuthorService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class BookAuthorController {
@@ -20,7 +20,7 @@ public class BookAuthorController {
     }
 
     @GetMapping("/author/{id}")
-    public Map<Descriptors.FieldDescriptor, Object> getAuthor(@PathVariable String id){
+    public AuthorDTO getAuthor(@PathVariable String id){
             return bookAuthorService.getAuthor(Integer.parseInt(id));
     }
 
