@@ -3,6 +3,7 @@ package com.ms.controller;
 import com.google.protobuf.Descriptors;
 import com.ms.dto.AuthorDTO;
 import com.ms.service.BookAuthorService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,8 +21,8 @@ public class BookAuthorController {
     }
 
     @GetMapping("/author/{id}")
-    public AuthorDTO getAuthor(@PathVariable String id){
-            return bookAuthorService.getAuthor(Integer.parseInt(id));
+    public ResponseEntity<AuthorDTO> getAuthor(@PathVariable String id){
+            return ResponseEntity.ok(bookAuthorService.getAuthor(Integer.parseInt(id)));
     }
 
     @GetMapping("/book/{authorId}")
