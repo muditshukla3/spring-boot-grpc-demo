@@ -9,3 +9,35 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: mappings, heapdump
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      shared:
+        registerHealthIndicator: true
+        slidingWindowType: count_based
+        slidingWindowSize: 5
+        failureRateThreshold: 40
+        slowCallRateThreshold: 40
+        permittedNumberOfCallsInHalfOpenState: 1
+        maxWaitDurationInHalfOpenState: 10s
+        waitDurationInOpenState: 10s
+        slowCallDurationThreshold: 2s
+        writableStackTraceEnabled: true
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+    instances:
+      circuit-breaker-author:
+        baseConfig: shared

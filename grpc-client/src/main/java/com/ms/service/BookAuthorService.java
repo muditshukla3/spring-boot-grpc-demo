@@ -6,15 +6,20 @@ import com.ms.Book;
 import com.ms.BookAuthorServiceGrpc;
 import com.ms.DummyDB;
 import com.ms.dto.AuthorDTO;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class BookAuthorService {
 
     //synchronous client
@@ -24,7 +29,7 @@ public class BookAuthorService {
     //asynchronous client
     @GrpcClient("grpc-service")
     BookAuthorServiceGrpc.BookAuthorServiceStub bookAuthorServiceStub;
-
+    @CircuitBreaker(name = "circuit-breaker-author", fallbackMethod = "getAuthorFallBack")
     public AuthorDTO getAuthor(int authorId){
         Author authorRequest = Author.newBuilder().setAuthorId(authorId).build();
         Author response = bookAuthorServiceBlockingStub.getAuthor(authorRequest);
@@ -36,6 +41,15 @@ public class BookAuthorService {
         return authorDTO;
     }
 
+    private AuthorDTO getAuthorFallBack(int authorId, Exception e){
+        log.info("Handled exception "+e.getMessage());
+        return new AuthorDTO(authorId, "","","", -1);
+    }
+
+    private AuthorDTO getAuthorFallBack(int authorId, CallNotPermittedException e){
+        log.info("Handled CallNotPermitted "+e.getMessage());
+        return new AuthorDTO(authorId, "","","", -1);
+    }
     public List<Map<Descriptors.FieldDescriptor, Object>> getBooksByAuthorId(int authorId) throws InterruptedException {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         Author authorRequest = Author.newBuilder().setAuthorId(authorId).build();

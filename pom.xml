@@ -28,6 +28,7 @@
         <protobuf-plugin.version>0.6.1</protobuf-plugin.version>
         <grpc.version>1.39.0</grpc.version>
         <lognet.grpc.version>5.0.0</lognet.grpc.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
@@ -36,6 +37,14 @@
                 <groupId>com.ms</groupId>
                 <artifactId>proto</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
